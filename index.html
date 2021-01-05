@@ -4,14 +4,120 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
 	<link rel="stylesheet" href="style.css">
-	<title>Weather Forecaster</title>
+	<title>Weather Forecast</title>
 </head>
 <body>
+	<header>
+		<h1>Weather Forecaster</h1>
+	</header>
 	
+	<div class="container-fluid">
+		<!-- class="g-0" -->
+		<div class="row"> 
+
+			<div class="col-lg-3 sidebar">
+				<h3 class="text-muted">Search for a City:</h3>
+				<form class="d-flex mb-3">
+					<input class="form-control me-3" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+					<!-- <button class="btn btn-danger" type="submit"><i class="fa fa-ban"></i></button>
+					<button class="btn btn-danger" type="submit"><i class="fa fa-times"></i></button> -->
+				</form>
+				<ul class="list-group">
+					<li class="list-group-item">Cras justo odio</li>
+					<!-- Use jQuery to add additional list items here -->
+				</ul>
+			</div>
+
+			<div class="col-lg-9">
+				<div class="row">
+					<!-- Current search locationweather  -->
+					<div class="card" style="width: 100%">
+						<div class="card-body">
+							<h2 class="card-title text-muted mb-4">City: </h5>
+							<p class="card-text">Temperature: </p>
+							<p class="card-text">Humidity: </p>
+							<p class="card-text">Wind Speed: </p>
+							<p class="card-text">UV Index: </p>
+						</div>
+					</div>
+				</div>
+
+				<!-- 5-Day forecast -->
+				<div class="row">
+					<h3 class="text-muted">5-Day Forecast</h3>
+				</div>
+
+				<div class="row">
+					<!-- Day 1 Forecast -->
+					<div class="col">
+						<div class="card text-white bg-primary" style="max-width: 18rem;">
+							<div class="card-body">
+								<h5 class="card-title">1/4/2021</h5>
+								<img>
+								<p class="card-text">Temp: </p>
+								<p class="card-text">Humidity: </p>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Day 2 Forecast -->
+					<div class="col">
+						<div class="card text-white bg-primary" style="max-width: 18rem;">
+							<div class="card-body">
+								<h5 class="card-title">1/4/2021</h5>
+								<img>
+								<p class="card-text">Temp: </p>
+								<p class="card-text">Humidity: </p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Day 3 Forecast -->
+					<div class="col">
+						<div class="card text-white bg-primary" style="max-width: 18rem;">
+							<div class="card-body">
+								<h5 class="card-title">1/4/2021</h5>
+								<img>
+								<p class="card-text">Temp: </p>
+								<p class="card-text">Humidity: </p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Day 4 Forecast -->
+					<div class="col">
+						<div class="card text-white bg-primary" style="max-width: 18rem;">
+							<div class="card-body">
+								<h5 class="card-title">1/4/2021</h5>
+								<img>
+								<p class="card-text">Temp: </p>
+								<p class="card-text">Humidity: </p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Day 5 Forecast -->
+					<div class="col">
+						<div class="card text-white bg-primary" style="max-width: 18rem;">
+							<div class="card-body">
+								<h5 class="card-title">1/4/2021</h5>
+								<img>
+								<p class="card-text">Temp: </p>
+								<p class="card-text">Humidity: </p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> -->
 	<script src="script.js"></script>
 </body>
 </html>
