@@ -4,15 +4,8 @@ $(document).ready(function () {
 	var searchHistory = [];
 	var city;
 
-	// cityHistory = loadFromStorage();
-	// drawHistory(cityHistory);
-	//DEBUG
-	// console.log("Init")
-	// console.log(loadFromStorage());
-
 	drawHistory(loadFromStorage());
 	
-
 	$("#search-city").on("click", function (event) {
 		event.preventDefault();
 
@@ -61,18 +54,25 @@ $(document).ready(function () {
 			method: "GET"
 		})
 			.then(function (forecast) {
+
 				for(var i = 0; i < 5; i++) {
-					// console.log(forecast.list[i].weather[0].icon);
+					//converts OWapi date from "2021-01-05 18:00:00" to "01/05/2021" format
+					var newDate = forecast.list[i].dt_txt.split(" ", 1)
+					newDate = newDate[0].split("-")
+					newDate = newDate[1] + "/" + newDate[2] + "/" + newDate[0];
+
+					// creates necessary html elements for bootstrap to apply its styling
 					var newForeCastItem = $("<div>").addClass("col");
 					var newBlueCard = $("<div>").addClass("card text-white bg-primary");
 					
 					var newCardBody = $("<div>").addClass("card-body");
-					var newcardTitle = $("<h5>").addClass("card-title").text("1/6/2021");
+					var newcardTitle = $("<h5>").addClass("card-title").text(newDate);
 					var newIcon = "https://openweathermap.org/img/wn/" + forecast.list[i].weather[0].icon + ".png";
 					var newCardImage = $("<img>").attr("src", newIcon);
 					var newTemp = $("<p>").addClass("card-text").text("Temp: " + forecast.list[i].main.temp + " \u00B0F");
 					var newHumi = $("<p>").addClass("card-text").text("Humidity: " + forecast.list[i].main.humidity + "%");
 
+					//append forecast card html elements from innermost to outermost element
 					newCardBody.append(newcardTitle).append(newCardImage).append(newTemp).append(newHumi);
 					newBlueCard.append(newCardBody);
 					newForeCastItem.append(newBlueCard);
