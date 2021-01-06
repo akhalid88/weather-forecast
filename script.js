@@ -12,15 +12,16 @@ $(document).ready(function () {
 		var city = $("input").eq(0).val();
 		cityHistory.push(city);
 		var queryURL = "https://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city + "&appid=" + apiKey;
-		console.log(cityHistory);
+
 		savetoStorage(cityHistory);
+
+
 		$.ajax({
 			url: queryURL,
 			method: "GET"
 		})
 			.then(function (response) {
 				$("input").eq(0).empty();
-				//$("#field-input").empty();
 				var cityName = response.name;
 				var cityTemp = response.main.temp;
 				var cityHum = response.main.humidity;
@@ -31,14 +32,13 @@ $(document).ready(function () {
 				var image = $("<img>");
 				var icon = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png";
 				image.attr("src", icon);
-				console.log(response.sys.sunrise);
 
 				clearData();
 
 				$("#city-name").append(cityName + " (" + date + ") ");
 				$("#city-name").append(image);
 				$("#city-temp").append(cityTemp + " \u00B0F");
-				$("#city-hum").append(cityHum + "%");
+				$("#city-humi").append(cityHum + "%");
 				$("#city-wind").append(cityWind + " MPH");
 			})
 
@@ -46,7 +46,7 @@ $(document).ready(function () {
 			$("#city-name").empty();
 			$("#city-name").empty();
 			$("#city-temp").empty();
-			$("#city-hum").empty();
+			$("#city-humi").empty();
 			$("#city-wind").empty();
 		}
 
@@ -54,6 +54,7 @@ $(document).ready(function () {
 
 	function savetoStorage(array) {
 		localStorage.setItem("history", JSON.stringify(array));
+		drawHistory(loadFromStorage());
 	}
 
 	function loadFromStorage() {
@@ -66,8 +67,18 @@ $(document).ready(function () {
 	}
 
 	function drawHistory(arr) {
-		var searchHistory = loadFromStorage();
-		console.log(searchHistory)
+		$(".list-group").empty();
+		if (arr) {
+			for (var i = 0; i < arr.length; i++) {
+				if (arr[i]) {
+					var newListItem = $("<li>");
+					newListItem.addClass("list-group-item");
+					newListItem.text(arr[i]);
+					$(".list-group").append(newListItem);
+				}
+			}
+		}
+
 	}
 
 })
