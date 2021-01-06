@@ -3,11 +3,14 @@ $(document).ready(function () {
 	var cityHistory = [];
 	var searchHistory = [];
 	var city;
+	var lat;
+	var lon;
 
 	drawHistory(loadFromStorage());
-	
+
 	$("#search-city").on("click", function (event) {
 		event.preventDefault();
+
 
 		var date = moment().format("M/DD/YY");
 		city = $("input").eq(0).val();
@@ -39,6 +42,11 @@ $(document).ready(function () {
 				var icon = "https://openweathermap.org/img/wn/" + weather.weather[0].icon + "@2x.png";
 				var image = $("<img>").attr("src", icon);
 
+				lat = weather.coord.lat.toFixed(2);
+				lon = weather.coord.lon.toFixed(2);
+
+
+
 				clearData();
 
 				$("#city-name").append(cityName + " (" + date + ") ");
@@ -46,18 +54,50 @@ $(document).ready(function () {
 				$("#city-temp").append(cityTemp + " \u00B0F");
 				$("#city-humi").append(cityHumi + "%");
 				$("#city-wind").append(cityWind + " MPH");
+
+				//UV Index Call
+				queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,daily,alerts&appid=" + apiKey;
+
+				$.ajax({
+					url: queryURL,
+					method: "GET"
+				})
+					.then(function (onecall) {
+
+						console.log("ONE CALL");
+						console.log(onecall);
+
+						var cityUvi = onecall.current.uvi;
+						$("#city-uvi").append(cityUvi);
+
+						if (cityUvi < 2.99) {
+							$("#city-uvi").addClass("bg-success");
+						} else if (cityUvi < 5.99) {
+							$("#city-uvi").addClass("bg-warning");
+						} else if (cityUvi < 10.99) {
+							$("#city-uvi").addClass("bg-danger");
+						} else if (cityUvi > 11) {
+							$("#city-uvi").addClass("bg-dark");
+						} else {
+							console.log("Error: " + cityUvi);
+						}
+
+					})
+
+
+
 			})
 
 
-		queryUrl = "https://api.openweathermap.org/data/2.5/forecast?units=imperial&q=" + city + "&appid=" + apiKey;
+		queryURL = "https://api.openweathermap.org/data/2.5/forecast?units=imperial&q=" + city + "&appid=" + apiKey;
 
 		$.ajax({
-			url: queryUrl,
+			url: queryURL,
 			method: "GET"
 		})
 			.then(function (forecast) {
 
-				for(var i = 0; i < 5; i++) {
+				for (var i = 0; i < 5; i++) {
 					//converts OWapi date from "2021-01-05 18:00:00" to "01/05/2021" format
 					var newDate = forecast.list[i].dt_txt.split(" ", 1)
 					newDate = newDate[0].split("-")
@@ -66,7 +106,7 @@ $(document).ready(function () {
 					// creates necessary html elements for bootstrap to apply its styling
 					var newForeCastItem = $("<div>").addClass("col");
 					var newBlueCard = $("<div>").addClass("card text-white bg-primary");
-					
+
 					var newCardBody = $("<div>").addClass("card-body");
 					var newcardTitle = $("<h5>").addClass("card-title").text(newDate);
 					var newIcon = "https://openweathermap.org/img/wn/" + forecast.list[i].weather[0].icon + ".png";
@@ -86,7 +126,7 @@ $(document).ready(function () {
 
 	function savetoStorage(array) {
 		//max array length is 3 for testing
-		if(array.length > 3) {
+		if (array.length > 3) {
 			array.pop();
 		}
 		localStorage.setItem("history", JSON.stringify(array));
@@ -111,7 +151,7 @@ $(document).ready(function () {
 		// console.log(arr);
 		$(".list-group").empty();
 		if (arr) {
-			
+
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i]) {
 					var newListItem = $("<button>");
@@ -130,6 +170,7 @@ $(document).ready(function () {
 		$("#city-temp").empty();
 		$("#city-humi").empty();
 		$("#city-wind").empty();
+		$("#city-uvi").empty();
 		$("#forecast-area").empty();
 	}
 
