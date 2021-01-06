@@ -3,14 +3,21 @@ $(document).ready(function () {
 	var cityHistory = [];
 	var searchHistory = [];
 
-	drawHistory(loadFromStorage());
+	cityHistory = loadFromStorage();
+	drawHistory(cityHistory);
 
 	$("#search-city").on("click", function (event) {
 		event.preventDefault();
 
 		var date = moment().format("M/DD/YY");
 		var city = $("input").eq(0).val();
-		cityHistory.push(city);
+		console.log(cityHistory);
+		if(cityHistory) {
+			cityHistory.push(city);
+		} else {
+			cityHistory = [city];
+		}
+
 		var queryURL = "https://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city + "&appid=" + apiKey;
 
 		savetoStorage(cityHistory);
@@ -42,18 +49,13 @@ $(document).ready(function () {
 				$("#city-wind").append(cityWind + " MPH");
 			})
 
-		function clearData() {
-			$("#city-name").empty();
-			$("#city-name").empty();
-			$("#city-temp").empty();
-			$("#city-humi").empty();
-			$("#city-wind").empty();
-		}
+		
 
 	})
 
 	function savetoStorage(array) {
 		localStorage.setItem("history", JSON.stringify(array));
+		console.log(array);
 		drawHistory(loadFromStorage());
 	}
 
@@ -71,14 +73,29 @@ $(document).ready(function () {
 		if (arr) {
 			for (var i = 0; i < arr.length; i++) {
 				if (arr[i]) {
-					var newListItem = $("<li>");
-					newListItem.addClass("list-group-item");
+					var newListItem = $("<button>");
+					newListItem.attr("type", "button");
+					newListItem.addClass("list-group-item list-group-item-action");
 					newListItem.text(arr[i]);
-					$(".list-group").append(newListItem);
+					$(".list-group").prepend(newListItem);
 				}
 			}
 		}
-
 	}
+
+	function clearData() {
+		$("#city-name").empty();
+		$("#city-name").empty();
+		$("#city-temp").empty();
+		$("#city-humi").empty();
+		$("#city-wind").empty();
+	}
+
+	function clearHistory() {
+		$(".list-group").empty();
+		clearData();
+	}
+
+$("#clear-search").on("click", clearHistory());
 
 })
