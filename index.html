@@ -20,10 +20,10 @@
 			<div class="col-lg-3 sidebar">
 				<h3 class="text-muted">Search for a City:</h3>
 				<form class="d-flex mb-3">
-					<input class="form-control me-3" type="search" placeholder="Search" aria-label="Search">
+					<input class="form-control me-3" id="fielf-input" type="search" placeholder="Search" aria-label="Search">
 					<button class="btn btn-primary" id="search-city" type="submit"><i class="fa fa-search"></i></button>
-					<button class="btn btn-danger" type="submit"><i class="fa fa-ban"></i></button>
-					<button class="btn btn-danger" type="submit"><i class="fa fa-times"></i></button>
+					<button class="btn btn-danger" id="clear-search" type="submit"><i class="fa fa-ban"></i></button>
+					<button class="btn btn-danger" id="clear-search" type="submit"><i class="fa fa-times"></i></button>
 				</form>
 				<ul class="list-group">
 					<li class="list-group-item">Cras justo odio</li>
@@ -36,11 +36,11 @@
 					<!-- Current search locationweather  -->
 					<div class="card" style="width: 100%">
 						<div class="card-body">
-							<h2 class="card-title text-muted mb-4" id="city-name">City: </h5>
-							<p class="card-text" id="city-temp">Temperature: </p>
-							<p class="card-text" id="city-hum">Humidity: </p>
-							<p class="card-text" id="city-wind">Wind Speed: </p>
-							<p class="card-text" id="city-uvi">UV Index: </p>
+							<h2 class="card-title text-muted mb-4">City: <span id="city-name"></span></h5>
+							<p class="card-text">Temperature: <span id="city-temp"></span></p>
+							<p class="card-text">Humidity: <span id="city-hum"></span></p>
+							<p class="card-text">Wind Speed: <span id="city-wind"></span></p>
+							<p class="card-text">UV Index: <span id="city-uvi"></span></p>
 						</div>
 					</div>
 				</div>
@@ -119,6 +119,7 @@
 	</div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 	<script src="script.js"></script>
 </body>
 </html>
