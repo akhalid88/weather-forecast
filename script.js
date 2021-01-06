@@ -13,7 +13,9 @@ $(document).ready(function () {
 		city = $("input").eq(0).val();
 
 		if (cityHistory) {
-			cityHistory.push(city);
+			console.log(city);
+			cityHistory.unshift(city);
+			console.log(cityHistory);
 		} else {
 			cityHistory = [city];
 		}
@@ -83,6 +85,10 @@ $(document).ready(function () {
 	})
 
 	function savetoStorage(array) {
+		//max array length is 3 for testing
+		if(array.length > 3) {
+			array.pop();
+		}
 		localStorage.setItem("history", JSON.stringify(array));
 		console.log("Save")
 		console.log(array);
@@ -112,7 +118,7 @@ $(document).ready(function () {
 					newListItem.attr("type", "button");
 					newListItem.addClass("list-group-item list-group-item-action");
 					newListItem.text(arr[i]);
-					$(".list-group").prepend(newListItem);
+					$(".list-group").append(newListItem);
 				}
 			}
 		}
