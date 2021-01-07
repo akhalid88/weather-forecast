@@ -138,6 +138,8 @@ This Project is licensed under MIT license
 -----------------------
 ## Author
 
+Muhammad A Khalid
+
 [LinkedIn](https://www.linkedin.com/in/abdullahkhalid/)
 <br>
 [GitHub](https://github.com/akhalid88)
