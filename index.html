@@ -20,18 +20,18 @@
 			<div class="col-lg-3 sidebar">
 				<h3 class="text-muted">Search for a City:</h3>
 				<form class="d-flex mb-3">
-					<input class="form-control me-3" id="fielf-input" type="search" placeholder="Search" aria-label="Search">
+					<input class="form-control me-3" id="field-input" type="search" placeholder="Search" aria-label="Search">
 					<button class="btn btn-primary" id="search-city" type="submit" title="Search City" ><i class="fa fa-search"></i></button>
 					<button class="btn btn-danger" id="clear-search" type="submit" title="Clear History"><i class="fa fa-times"></i></button>
 					<!-- <button class="btn btn-danger" id="clear-search" type="submit"><i class="fa fa-ban"></i></button> -->
 				</form>
-				<ul class="list-group">
+				<ul class="list-group shadow mb-5 rounded">
 					<!-- Use jQuery to add additional list items here -->
 				</ul>
 			</div>
 
 			<div class="col-lg-9">
-				<div class="row">
+				<div class="row shadow mb-5 rounded">
 					<!-- Current search locationweather  -->
 					<div class="card mt-3" style="width: 100%">
 						<div class="card-body">
@@ -39,7 +39,7 @@
 							<p class="card-text">Temperature: <span id="city-temp"></span></p>
 							<p class="card-text">Humidity: <span id="city-humi"></span></p>
 							<p class="card-text">Wind Speed: <span id="city-wind"></span></p>
-							<p class="card-text">UV Index: <span id="city-uvi"></span></p>
+							<p class="card-text">UV Index: <span id="city-uvi" class="rounded-pill py-2 px-3"></span></p>
 						</div>
 					</div>
 				</div>

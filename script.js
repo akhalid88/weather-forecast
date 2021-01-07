@@ -3,8 +3,7 @@ $(document).ready(function () {
 	var cityHistory = [];
 	var searchHistory = [];
 	var city;
-	var lat;
-	var lon;
+	
 
 	drawHistory(loadFromStorage());
 
@@ -12,17 +11,22 @@ $(document).ready(function () {
 		event.preventDefault();
 
 
-		var date = moment().format("M/DD/YY");
-		city = $("input").eq(0).val();
+		
+		var city = $("input").eq(0).val();
 
 		if (cityHistory) {
-			console.log(city);
+			// console.log(city);
 			cityHistory.unshift(city);
-			console.log(cityHistory);
+			// console.log(cityHistory);
 		} else {
 			cityHistory = [city];
 		}
 
+		drawWeather(city, apiKey);
+	})
+
+	function drawWeather(city, apiKey) {
+		var date = moment().format("M/DD/YY");
 		var queryURL = "https://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city + "&appid=" + apiKey;
 
 		savetoStorage(cityHistory);
@@ -33,7 +37,7 @@ $(document).ready(function () {
 		})
 			.then(function (weather) {
 
-				$("input").empty();
+				$("#field-input").text("");
 
 				var cityName = weather.name;
 				var cityTemp = weather.main.temp;
@@ -42,8 +46,8 @@ $(document).ready(function () {
 				var icon = "https://openweathermap.org/img/wn/" + weather.weather[0].icon + "@2x.png";
 				var image = $("<img>").attr("src", icon);
 
-				lat = weather.coord.lat.toFixed(2);
-				lon = weather.coord.lon.toFixed(2);
+				var lat = weather.coord.lat.toFixed(2);
+				var lon = weather.coord.lon.toFixed(2);
 
 
 
@@ -56,16 +60,15 @@ $(document).ready(function () {
 				$("#city-wind").append(cityWind + " MPH");
 
 				//UV Index Call
-				queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,daily,alerts&appid=" + apiKey;
+				var oneCallURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,daily,alerts&appid=" + apiKey;
 
 				$.ajax({
-					url: queryURL,
+					url: oneCallURL,
 					method: "GET"
 				})
 					.then(function (onecall) {
-
-						console.log("ONE CALL");
-						console.log(onecall);
+						// console.log("ONE CALL");
+						// console.log(onecall);
 
 						var cityUvi = onecall.current.uvi;
 						$("#city-uvi").append(cityUvi);
@@ -81,31 +84,31 @@ $(document).ready(function () {
 						} else {
 							console.log("Error: " + cityUvi);
 						}
-
 					})
-
-
-
 			})
 
-
-		queryURL = "https://api.openweathermap.org/data/2.5/forecast?units=imperial&q=" + city + "&appid=" + apiKey;
+		
+		var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?&units=imperial&q=" + city + "&appid=" + apiKey;
 
 		$.ajax({
-			url: queryURL,
+			url: forecastURL,
 			method: "GET"
 		})
 			.then(function (forecast) {
-
-				for (var i = 0; i < 5; i++) {
+				// console.log("Forecast: ");
+				// console.log(forecastURL);
+				// console.log(forecast);
+				for (var i = 3; i < 40; i+=8) {
 					//converts OWapi date from "2021-01-05 18:00:00" to "01/05/2021" format
 					var newDate = forecast.list[i].dt_txt.split(" ", 1)
 					newDate = newDate[0].split("-")
 					newDate = newDate[1] + "/" + newDate[2] + "/" + newDate[0];
 
+					// console.log(i);
+					// console.log(forecast.list[i].dt_txt);
 					// creates necessary html elements for bootstrap to apply its styling
 					var newForeCastItem = $("<div>").addClass("col");
-					var newBlueCard = $("<div>").addClass("card text-white bg-primary");
+					var newBlueCard = $("<div>").addClass("card text-white bg-primary shadow mb-5 rounded");
 
 					var newCardBody = $("<div>").addClass("card-body");
 					var newcardTitle = $("<h5>").addClass("card-title").text(newDate);
@@ -122,7 +125,7 @@ $(document).ready(function () {
 					// $("#forecast-area").append(newForeCastItem).append(newBlueCard).append(newCardBody).append(newcardTitle).append(newCardImage).append(newTemp).append(newHumi);
 				}
 			})
-	})
+	}
 
 	function savetoStorage(array) {
 		//max array length is 3 for testing
@@ -130,8 +133,8 @@ $(document).ready(function () {
 			array.pop();
 		}
 		localStorage.setItem("history", JSON.stringify(array));
-		console.log("Save")
-		console.log(array);
+		// console.log("Save")
+		// console.log(array);
 		drawHistory(loadFromStorage());
 	}
 
