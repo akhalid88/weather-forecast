@@ -1,45 +1,19 @@
 $(document).ready(function () {
 	var apiKey = "ab1c0d78c19197471fbb5348c3b1f2f1";
-	var cityHistory = [];
-//	var searchHistory = [];
-	//var city;
-
-	cityHistory = loadFromStorage();
+	var cityHistory = loadFromStorage();
+	
 	drawHistory(cityHistory);
-	// drawHistory(loadFromStorage());
-
-	$("#search-city").on("click", function (event) {
-		event.preventDefault();
-
-		var city = $("input").eq(0).val();
-		
-		if (cityHistory) {
-			// console.log(city);
-			cityHistory.unshift(city);
-			// console.log(cityHistory);
-		} else {
-			cityHistory = [city];
-		}
-
-		$("#field-input").val("");
-
-		drawWeather(city, apiKey);
-	})
-
-
-
+	
 	function drawWeather(city, apiKey) {
 		var date = moment().format("M/DD/YY");
 		var queryURL = "https://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city + "&appid=" + apiKey;
-
-		savetoStorage(cityHistory);
 
 		$.ajax({
 			url: queryURL,
 			method: "GET"
 		})
 			.then(function (weather) {
-
+				//get city data from weather api and display on page in main body section
 				var cityName = weather.name;
 				var cityTemp = weather.main.temp;
 				var cityHumi = weather.main.humidity;
@@ -50,7 +24,7 @@ $(document).ready(function () {
 				var lat = weather.coord.lat.toFixed(2);
 				var lon = weather.coord.lon.toFixed(2);
 
-				clearData();
+				clearCityInfo();
 
 				$("#city-name").append(cityName + " (" + date + ") ");
 				$("#city-name").append(image);
@@ -66,9 +40,7 @@ $(document).ready(function () {
 					method: "GET"
 				})
 					.then(function (onecall) {
-						// console.log("ONE CALL");
-						// console.log(onecall);
-
+						//grab UVI data, append to div, and apply appropriate styling
 						var cityUvi = onecall.current.uvi;
 						$("#city-uvi").append(cityUvi);
 
@@ -88,7 +60,6 @@ $(document).ready(function () {
 							console.log("Error: " + cityUvi);
 						}
 					})
-
 			})
 
 		var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?&units=imperial&q=" + city + "&appid=" + apiKey;
@@ -98,23 +69,23 @@ $(document).ready(function () {
 			method: "GET"
 		})
 			.then(function (forecast) {
-				// console.log("Forecast: ");
-				// // console.log(forecastURL);
-				// console.log(forecast);
-
+				//iterate through array of forecast data and create html elements for each future day
 				for (var i = 3; i < 40; i += 8) {
 					//converts OWapi date from "2021-01-05 18:00:00" to "01/05/2021" format
 					var newDate = forecast.list[i].dt_txt.split(" ", 1)
 					newDate = newDate[0].split("-")
 					newDate = newDate[1] + "/" + newDate[2] + "/" + newDate[0];
 
-					// console.log(i);
-					// console.log(forecast.list[i].dt_txt);
-					// creates necessary html elements for bootstrap to apply its styling
+					//create outer column div
 					var newForeCastItem = $("<div>").addClass("col");
+
+					//create blue card div
 					var newBlueCard = $("<div>").addClass("card text-white bg-primary shadow mb-5 rounded");
 
+					//create inner card body div
 					var newCardBody = $("<div>").addClass("card-body");
+
+					//create inner card data elements
 					var newcardTitle = $("<h5>").addClass("card-title").text(newDate);
 					var newIcon = "https://openweathermap.org/img/wn/" + forecast.list[i].weather[0].icon + ".png";
 					var newCardImage = $("<img>").attr("src", newIcon);
@@ -128,60 +99,44 @@ $(document).ready(function () {
 					$("#forecast-area").append(newForeCastItem);
 				}
 			})
-
 	}
 
 	function savetoStorage(array) {
-		//max array length is 3 for testing
-		if (array.length > 3) {
+
+		if (array.length > 10) {
 			array.pop();
 		}
-		
+
 		localStorage.setItem("history", JSON.stringify(array));
-		console.log("Save")
-		console.log(array);
+
 		drawHistory(loadFromStorage());
 	}
 
 	function loadFromStorage() {
 		if (localStorage.length === 0) {
+			//checks for empty localStorage; if empty does nothing
 			console.log("history = null")
 		} else {
 			cityHistory = JSON.parse(localStorage.getItem("history"));
-			console.log("Local Storage: ");
-			console.log(cityHistory);
 			return cityHistory;
 		}
 	}
 
 	function drawHistory(arr) {
-
-		//DEBUG
-		// console.log("Draw");
-		// console.log(arr);
 		$(".list-group").empty();
 		if (arr) {
-			// console.log(arr);
 			for (var i = 0; i < arr.length; i++) {
-			//	if (arr[i]) {
-					// console.log("City: " + arr[i]);
-
-					var newListItem = $("<button>");
-					newListItem.attr("type", "button");
-					newListItem.addClass("list-group-item list-group-item-action history-btn");
-					newListItem.text(arr[i]);
-//					$(".list-group").append(newListItem);
-
-					$(".list-group").append(newListItem);
-										
-					// console.log("New List Item")
-					// console.log(newListItem);
-				//}
+				var newListItem = $("<button>");
+				newListItem.attr("type", "button");
+				newListItem.attr("data-name", arr[i]);
+				newListItem.addClass("list-group-item list-group-item-action history-btn");
+				newListItem.text(arr[i]);
+				$(".list-group").append(newListItem);
 			}
 		}
 	}
 
-	function clearData() {
+	function clearCityInfo() {
 		$("#city-name").empty();
 		$("#city-temp").empty();
 		$("#city-humi").empty();
@@ -190,14 +145,38 @@ $(document).ready(function () {
 		$("#forecast-area").empty();
 	}
 
-	function clearHistory() {
-		$(".list-group").empty();
-		//clearData();
-	}
-
 	function removeUvClasses() {
 		$("#city-uvi").removeClass("bg-success bg-warning bg-danger bg-dark text-white text-black");
 	}
 
-//	$("#clear-search").on("click", clearHistory());
+	// function clearHistory() {
+	// 	$(".list-group").empty();
+	// 	//clearCityInfo();
+	// }
+
+	$("#search-city").on("click", function (event) {
+		event.preventDefault();
+
+		var city = $("input").eq(0).val();
+
+		if (cityHistory) {
+			// console.log(city);
+			cityHistory.unshift(city);
+			// console.log(cityHistory);
+		} else {
+			cityHistory = [city];
+		}
+
+		$("#field-input").val("");
+		savetoStorage(cityHistory);
+		drawWeather(city, apiKey);
+	})
+
+	$(".history-btn").on("click", function (event) {
+		event.stopPropagation();
+		city = $(this).attr("data-name");
+		drawWeather(city, apiKey);
+	})
+
+	// $("#clear-search").on("click", clearHistory());
 })
