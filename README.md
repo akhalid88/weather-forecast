@@ -1,4 +1,4 @@
-# Weather Dashboard and Forecast
+![banner](readme/banner.png)
 
 I am a leaf on the wind. Watch how I soar!
 
@@ -18,7 +18,7 @@ I am a leaf on the wind. Watch how I soar!
 -----------------------
 ## Description
 
-![banner](readme/banner.png)
+
 Knowing what to expect from the weather is beneficial to planning out one's day. With the Weather Dashboard you can do just that.
 
 The WEather dashboard retrieves data from the OpenWeather API and provides the user with weather data for a given city as well as a 5 day forecast. This application utilizes dynamically updated HTML and CSS
