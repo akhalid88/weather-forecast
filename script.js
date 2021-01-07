@@ -1,19 +1,18 @@
 $(document).ready(function () {
 	var apiKey = "ab1c0d78c19197471fbb5348c3b1f2f1";
 	var cityHistory = [];
-	var searchHistory = [];
-	var city;
-	
+//	var searchHistory = [];
+	//var city;
 
-	drawHistory(loadFromStorage());
+	cityHistory = loadFromStorage();
+	drawHistory(cityHistory);
+	// drawHistory(loadFromStorage());
 
 	$("#search-city").on("click", function (event) {
 		event.preventDefault();
 
-
-		
 		var city = $("input").eq(0).val();
-
+		
 		if (cityHistory) {
 			// console.log(city);
 			cityHistory.unshift(city);
@@ -22,8 +21,12 @@ $(document).ready(function () {
 			cityHistory = [city];
 		}
 
+		$("#field-input").val("");
+
 		drawWeather(city, apiKey);
 	})
+
+
 
 	function drawWeather(city, apiKey) {
 		var date = moment().format("M/DD/YY");
@@ -37,8 +40,6 @@ $(document).ready(function () {
 		})
 			.then(function (weather) {
 
-				$("#field-input").text("");
-
 				var cityName = weather.name;
 				var cityTemp = weather.main.temp;
 				var cityHumi = weather.main.humidity;
@@ -48,8 +49,6 @@ $(document).ready(function () {
 
 				var lat = weather.coord.lat.toFixed(2);
 				var lon = weather.coord.lon.toFixed(2);
-
-
 
 				clearData();
 
@@ -74,20 +73,24 @@ $(document).ready(function () {
 						$("#city-uvi").append(cityUvi);
 
 						if (cityUvi < 2.99) {
-							$("#city-uvi").addClass("bg-success");
+							removeUvClasses();
+							$("#city-uvi").addClass("bg-success text-black");
 						} else if (cityUvi < 5.99) {
-							$("#city-uvi").addClass("bg-warning");
+							removeUvClasses();
+							$("#city-uvi").addClass("bg-warning text-black");
 						} else if (cityUvi < 10.99) {
-							$("#city-uvi").addClass("bg-danger");
+							removeUvClasses();
+							$("#city-uvi").addClass("bg-danger text-black");
 						} else if (cityUvi > 11) {
-							$("#city-uvi").addClass("bg-dark");
+							removeUvClasses();
+							$("#city-uvi").addClass("bg-dark text-white");
 						} else {
 							console.log("Error: " + cityUvi);
 						}
 					})
+
 			})
 
-		
 		var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?&units=imperial&q=" + city + "&appid=" + apiKey;
 
 		$.ajax({
@@ -96,9 +99,10 @@ $(document).ready(function () {
 		})
 			.then(function (forecast) {
 				// console.log("Forecast: ");
-				// console.log(forecastURL);
+				// // console.log(forecastURL);
 				// console.log(forecast);
-				for (var i = 3; i < 40; i+=8) {
+
+				for (var i = 3; i < 40; i += 8) {
 					//converts OWapi date from "2021-01-05 18:00:00" to "01/05/2021" format
 					var newDate = forecast.list[i].dt_txt.split(" ", 1)
 					newDate = newDate[0].split("-")
@@ -122,9 +126,9 @@ $(document).ready(function () {
 					newBlueCard.append(newCardBody);
 					newForeCastItem.append(newBlueCard);
 					$("#forecast-area").append(newForeCastItem);
-					// $("#forecast-area").append(newForeCastItem).append(newBlueCard).append(newCardBody).append(newcardTitle).append(newCardImage).append(newTemp).append(newHumi);
 				}
 			})
+
 	}
 
 	function savetoStorage(array) {
@@ -132,9 +136,10 @@ $(document).ready(function () {
 		if (array.length > 3) {
 			array.pop();
 		}
+		
 		localStorage.setItem("history", JSON.stringify(array));
-		// console.log("Save")
-		// console.log(array);
+		console.log("Save")
+		console.log(array);
 		drawHistory(loadFromStorage());
 	}
 
@@ -142,8 +147,10 @@ $(document).ready(function () {
 		if (localStorage.length === 0) {
 			console.log("history = null")
 		} else {
-			searchHistory = JSON.parse(localStorage.getItem("history"));
-			return searchHistory;
+			cityHistory = JSON.parse(localStorage.getItem("history"));
+			console.log("Local Storage: ");
+			console.log(cityHistory);
+			return cityHistory;
 		}
 	}
 
@@ -154,21 +161,27 @@ $(document).ready(function () {
 		// console.log(arr);
 		$(".list-group").empty();
 		if (arr) {
-
+			// console.log(arr);
 			for (var i = 0; i < arr.length; i++) {
-				if (arr[i]) {
+			//	if (arr[i]) {
+					// console.log("City: " + arr[i]);
+
 					var newListItem = $("<button>");
 					newListItem.attr("type", "button");
-					newListItem.addClass("list-group-item list-group-item-action");
+					newListItem.addClass("list-group-item list-group-item-action history-btn");
 					newListItem.text(arr[i]);
+//					$(".list-group").append(newListItem);
+
 					$(".list-group").append(newListItem);
-				}
+										
+					// console.log("New List Item")
+					// console.log(newListItem);
+				//}
 			}
 		}
 	}
 
 	function clearData() {
-		$("#city-name").empty();
 		$("#city-name").empty();
 		$("#city-temp").empty();
 		$("#city-humi").empty();
@@ -179,8 +192,12 @@ $(document).ready(function () {
 
 	function clearHistory() {
 		$(".list-group").empty();
-		clearData();
+		//clearData();
 	}
 
-	$("#clear-search").on("click", clearHistory());
+	function removeUvClasses() {
+		$("#city-uvi").removeClass("bg-success bg-warning bg-danger bg-dark text-white text-black");
+	}
+
+//	$("#clear-search").on("click", clearHistory());
 })
