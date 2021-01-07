@@ -9,6 +9,7 @@
 	<title>Weather Forecast</title>
 </head>
 <body>
+	
 	<header class="nav justify-content-center bg-dark text-light">
 		<h1 class="nav-item">Weather Dashboard</h1>
 	</header>
@@ -17,7 +18,7 @@
 		<!-- class="g-0" -->
 		<div class="row"> 
 
-			<div class="col-lg-3 sidebar">
+			<aside class="col-lg-3 sidebar">
 				<h3 class="text-muted">Search for a City:</h3>
 				<form class="d-flex mb-3">
 					<input class="form-control me-3" id="field-input" type="text" placeholder="Search">
@@ -28,10 +29,10 @@
 				<ul class="list-group shadow mb-5 rounded">
 					<!-- Use jQuery to add additional list items here -->
 				</ul>
-			</div>
+			</aside>
 
 			<div class="col-lg-9">
-				<div class="row shadow mb-5">
+				<section class="row shadow mb-5">
 					<!-- Current search location weather  -->
 					<div class="card mt-3" style="width: 100%">
 						<div class="card-body">
@@ -42,16 +43,16 @@
 							<p class="card-text">UV Index: <span id="city-uvi" class="rounded-pill py-2 px-3"></span></p>
 						</div>
 					</div>
-				</div>
+				</section>
 
 				<!-- 5-Day forecast -->
 				<div class="row">
 					<h3 class="text-muted mt-3">5-Day Forecast</h3>
 				</div>
 
-				<div class="row" id="forecast-area">
+				<section class="row" id="forecast-area">
 					<!-- use jQuery to build forecast cards here -->
-				</div>
+				</section>
 			</div>
 
 		</div>

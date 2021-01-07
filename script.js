@@ -1,9 +1,9 @@
 $(document).ready(function () {
 	var apiKey = "ab1c0d78c19197471fbb5348c3b1f2f1";
 	var cityHistory = loadFromStorage();
-	
+
 	drawHistory(cityHistory);
-	
+
 	function drawWeather(city, apiKey) {
 		var date = moment().format("M/DD/YY");
 		var queryURL = "https://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city + "&appid=" + apiKey;
@@ -149,11 +149,6 @@ $(document).ready(function () {
 		$("#city-uvi").removeClass("bg-success bg-warning bg-danger bg-dark text-white text-black");
 	}
 
-	// function clearHistory() {
-	// 	$(".list-group").empty();
-	// 	//clearCityInfo();
-	// }
-
 	$("#search-city").on("click", function (event) {
 		event.preventDefault();
 
@@ -173,10 +168,15 @@ $(document).ready(function () {
 	})
 
 	$(".history-btn").on("click", function (event) {
-		event.stopPropagation();
+		event.preventDefault();
 		city = $(this).attr("data-name");
 		drawWeather(city, apiKey);
 	})
 
-	// $("#clear-search").on("click", clearHistory());
+	$("#clear-search").on("click", function (event) {
+		event.preventDefault();
+		$(".list-group").empty();
+		localStorage.clear();
+		cityHistory = [];
+	});
 })
